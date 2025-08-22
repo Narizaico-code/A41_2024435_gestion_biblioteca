@@ -12,7 +12,7 @@
 	<artifactId>gestion_biblioteca</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gestion_biblioteca</name>
-	<description>Gestion de una biblioteca</description>
+	<description>Sistema de Gestión de Biblioteca</description>
 	<url/>
 	<licenses>
 		<license/>
