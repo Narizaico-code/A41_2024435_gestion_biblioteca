@@ -10,4 +10,5 @@ public interface ILibroService {
     Libro buscarLibroPorId(Integer codigo);
     void guardarLibro(Libro libro);
     void eliminarLibro(Libro libro);
+    Libro buscarLibroCategoria();
 }
