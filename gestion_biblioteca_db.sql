@@ -1,14 +1,12 @@
 drop database if exists gestion_biblioteca_db;
 create database gestion_biblioteca_db;
 use gestion_biblioteca_db;
-
 create table Generos(
 	codigo_genero integer auto_increment,
     tipo varchar(255),
     descripcion varchar(255),
     constraint pk_genero primary key (codigo_genero)
 );
-
 create table Ubicaciones(
 	codigo_ubicacion integer auto_increment,
     edificio varchar(16),
@@ -17,7 +15,6 @@ create table Ubicaciones(
     fila integer,
     constraint pk_ubicacion primary key (codigo_ubicacion)
 );
-
 create table Libros(
 	codigo_libro integer auto_increment,
     codigo_genero integer,
