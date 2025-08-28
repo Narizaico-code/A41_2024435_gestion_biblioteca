@@ -179,7 +179,11 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                             try{
                                 libro.setCodigoGenero(Integer.parseInt(genero));
                             }catch (NumberFormatException e){
-
+                                if (generoService.listarPorGenero(genero) == null || generoService.listarPorGenero(genero).isEmpty()){
+                                    logger.info("Valor invalido");
+                                } else {
+                                    generoService.listarPorGenero(genero)
+                                }
                             }
                         }
                         libro.setDescripcion(consola.nextLine());
