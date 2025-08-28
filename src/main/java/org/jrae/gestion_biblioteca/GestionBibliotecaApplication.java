@@ -163,10 +163,25 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                 switch (opcionClase) {
                     case 1 -> {
                         var libro = new Libro();
+                        List<Genero> listadoGeneros = generoService.listarGeneros();
                         logger.info(sl +"************** Agregar un nuevo libro **************" + sl);
                         logger.info("Nombre del libro: " +sl);
-                        libro.setTipo(consola.nextLine());
-                        logger.info("Una descripcion para el genero(No más de 255 caracteres): " + sl);
+                        libro.setTitulo(consola.nextLine());
+                        logger.info("Seleccione un genero: " +sl);
+                        listadoGeneros.forEach( g -> logger.info("Genero: " + g.getTipo() + sl + "codigo del genero: " + g.getCodigoGenero() + sl));
+                        logger.info("Escriba el genero o su codigo: " + sl);
+                        var genero = consola.nextLine();
+                        var bgenero = false;
+                        if (bgenero = false){
+                            if (genero.isEmpty() || genero == null){
+                                return false;
+                            }
+                            try{
+                                libro.setCodigoGenero(Integer.parseInt(genero));
+                            }catch (NumberFormatException e){
+
+                            }
+                        }
                         libro.setDescripcion(consola.nextLine());
                         generoService.guardarGenero(libro);
                     }

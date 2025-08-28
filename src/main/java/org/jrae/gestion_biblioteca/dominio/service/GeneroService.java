@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
-public class GeneroService implements IGeneroService{
+public class GeneroService implements IGeneroService {
     @Autowired
     private GeneroCrud crud;
     @Autowired
