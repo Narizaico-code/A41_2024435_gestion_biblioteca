@@ -15,10 +15,17 @@ create table Ubicaciones(
     fila integer,
     constraint pk_ubicacion primary key (codigo_ubicacion)
 );
+create table Autores(
+    codigo_autor integer auto_increment,
+    nombre varchar(255),
+    nacionalidad varchar(255),
+    constraint pk_autor primary key (codigo_autor)
+);
 create table Libros(
 	codigo_libro integer auto_increment,
     codigo_genero integer,
     codigo_ubicacion integer,
+    codigo_autor integer,
     titulo varchar(128),
     autor varchar(64),
     fecha_publicacion date,
@@ -28,5 +35,7 @@ create table Libros(
     constraint fk_libro_genero foreign key (codigo_genero)
 		references Generos(codigo_genero) on delete cascade,
 	constraint fk_libro_ubicacion foreign key (codigo_ubicacion)
-		references Ubicaciones(codigo_ubicacion) on delete cascade
+		references Ubicaciones(codigo_ubicacion) on delete cascade,
+	constraint fk_libro_autor foreign key (codigo_autor)
+	    references Autores(codigo_autor) on delete cascade
 );
