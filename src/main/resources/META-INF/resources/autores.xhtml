@@ -1,13 +1,85 @@
 <!DOCTYPE html>
 <h:html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h = "http://xmlns.jcp.org/jsf/html"
-        xmlns:f = "http://xmlns.jcp.org/jsf/core"
-        xmlns:p = "http://primefaces.org/ui">
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Gestion de los autores✍️</title>
+        <title>Gestión de autores✍️</title>
         <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
         <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/primeone-dark.css"/>
     </h:head>
     <h:body>
-        
+        <div class="p-3">
+            <h:form id="formulario-autores">
+                <p:growl id="mensaje_emergente" showDetail="true" life="3000"/>
+
+                <div class="flex justify-content-between align-items-center mb-3">
+                    <p:commandButton value="Volver al Menú Principal" action="index?faces-redirect=true"
+                                     icon="pi pi-arrow-left" class="p-button-secondary"/>
+
+                    <p:commandButton value="Agregar Autor" icon="pi pi-plus"
+                                     action="#{autoresController.agregarAutor}"
+                                     oncomplete="PF('ventanaModalAutor').show()"
+                                     update=":formulario-autores:autor-form"/>
+                </div>
+
+                <p:dataTable id="tabla-autores" value="#{autoresController.autores}" var="autor"
+                             class="p-datatable-gridlines">
+                    <p:column headerText="Código">
+                        <h:outputText value="#{autor.codigoAutor}"/>
+                    </p:column>
+
+                    <p:column headerText="Nombre" sortBy="#{autor.nombre}" filterBy="#{autor.nombre}">
+                        <h:outputText value="#{autor.nombre}"/>
+                    </p:column>
+
+                    <p:column headerText="Nacionalidad">
+                        <h:outputText value="#{autor.nacionalidad}"/>
+                    </p:column>
+
+                    <p:column headerText="Acciones">
+                        <div class="flex gap-2">
+                            <p:commandButton icon="pi pi-pencil" title="Editar"
+                                             action="#{autoresController.editarAutor(autor)}"
+                                             process="@this"
+                                             update=":formulario-autores:autor-form"
+                                             oncomplete="PF('ventanaModalAutor').show()">
+                                <f:setPropertyActionListener value="#{autor}"
+                                                             target="#{autoresController.autorSeleccionado}"/>
+                                <p:resetInput target=":formulario-autores:autor-from"/>
+                            </p:commandButton>
+                            <p:commandButton icon="pi pi-trash" title="Eliminar"
+                                             action="#{autoresController.eliminarAutor}"
+                                             update=":formulario-autores:mensaje_emergente, :formulario-autores:tabla-autores">
+                                <f:setPropertyActionListener value="#{autor}"
+                                                             target="#{autoresController.autorSeleccionado}"/>
+                                    </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dialog header="Datos del Autor" widgetVar="ventanaModalAutor" modal="true"
+                          class="w-6">
+                    <h:panelGrid id="autor-form" class="w-full">
+                        <p:outputLabel for="nombre" value="Nombre:"/>
+                        <p:inputText id="nombre" value="#{autoresController.autorSeleccionado.nombre}"
+                                     required="true" class="w-full"/>
+
+                        <p:outputLabel for="nacionalidad" value="Nacionalidad:"/>
+                        <p:inputText id="nacionalidad" value="#{autoresController.autorSeleccionado.nacionalidad}"
+                                     class="w-full"/>
+                    </h:panelGrid>
+
+                    <f:facet name="footer">
+                        <div class="flex justify-content-end gap-2">
+                            <p:commandButton value="Cancelar" onclick="PF('ventanaModalAutor').hide()"
+                                             class="p-button-secondary"/>
+                            <p:commandButton value="Guardar" action="#{autoresController.guardarAutor}"
+                                             update=":formulario-autores:mensaje_emergente, :formulario-autores:tabla-autores"/>
+                        </div>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </div>
     </h:body>
+</h:html>

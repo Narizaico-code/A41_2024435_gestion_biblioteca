@@ -1,13 +1,137 @@
 <!DOCTYPE html>
 <h:html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h = "http://xmlns.jcp.org/jsf/html"
-        xmlns:f = "http://xmlns.jcp.org/jsf/core"
-        xmlns:p = "http://primefaces.org/ui">
-    <h:head>
-        <title>Gestion de los libros📚</title>
-        <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
-        <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/primeone-dark.css"/>
-    </h:head>
-    <h:body>
-        
-    </h:body>
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Gestión de Libros</title>
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/primeone-dark.css"/>
+</h:head>
+<h:body>
+    <div class="p-3">
+        <h:form id="formulario-libros">
+            <p:growl id="mensaje_emergente" showDetail="true"/>
+
+            <div class="flex justify-content-between align-items-center mb-3">
+                <p:commandButton value="Volver al Menú Principal" action="index?faces-redirect=true"
+                                 icon="pi pi-arrow-left" ajax="false" class="p-button-secondary"/>
+
+                <p:commandButton value="Agregar Libro" icon="pi pi-plus"
+                                 action="#{librosController.agregarLibro}"
+                                 oncomplete="PF('ventanaModalLibro').show()" update=":formulario-libros:libro-form"/>
+            </div>
+
+            <p:dataTable id="tabla-libros" value="#{librosController.libros}" var="libro">
+                <f:facet name="header">
+                    <div class="flex justify-content-center flex-wrap card-container yellow-container">
+                        <div class="flex align-items-center
+                                            justify-content-center
+                                            w-20rem h-4rem
+                                            bg-yellow-500 font-bold
+                                            text-gray-900 border-round m-2">
+                            <h3>Biblioteca >>> Libros📚</h3>
+                        </div>
+                    </div>
+                </f:facet>
+
+                <p:column headerText="Código">
+                    <h:outputText value="#{libro.codigoLibro}"/>
+                </p:column>
+
+                <p:column headerText="Título">
+                    <h:outputText value="#{libro.titulo}"/>
+                </p:column>
+
+                <p:column headerText="Autor" sortBy="#{libro.autor.nombre}" filterBy="#{libro.autor.nombre}">
+                    <h:outputText value="#{libro.autor.nombre}"/>
+                </p:column>
+
+                <p:column headerText="Género" sortBy="#{libro.genero.tipo}" filterBy="#{libro.genero.tipo}">
+                    <h:outputText value="#{libro.genero.tipo}"/>
+                </p:column>
+
+                <p:column headerText="Ubicación" filterBy="#{libro.ubicacion.descripcionCompleta}">
+                    <h:outputText value="#{libro.ubicacion.descripcionCompleta}"/>
+                </p:column>
+
+                <p:column headerText="Disponibilidad">
+                    <h:outputText value="#{libro.disponibilidad}"/>
+                </p:column>
+
+                <p:column headerText="Acciones">
+                    <div class="flex gap-2">
+                        <p:commandButton icon="pi pi-pencil" title="Editar"
+                                         action="#{librosController.editarLibro(libro)}"
+                                         oncomplete="PF('ventanaModalLibro').show()"
+                                         process="@this"
+                                         update=":formulario-libros:libro-form"/>
+
+                        <p:commandButton icon="pi pi-trash" title="Eliminar"
+                                         action="#{librosController.eliminarLibro}"
+                                         update=":formulario-libros:mensaje_emergente, :formulario-libros:tabla-libros"/>
+                    </div>
+                </p:column>
+            </p:dataTable>
+
+            <p:dialog header="Datos del Libro" widgetVar="ventanaModalLibro" modal="true"
+                       class="w-8">
+                <h:panelGrid id="libro-form">
+                    <p:outputLabel for="titulo" value="Título:" />
+                    <p:inputText id="titulo" value="#{librosController.libroSeleccionado.titulo}"
+                                 required="true" class="w-full"/>
+
+                    <p:outputLabel for="autor" value="Autor:" />
+                    <p:selectOneMenu id="autor" value="#{librosController.libroSeleccionado.autor}"
+                                     required="true" class="w-full">
+                        <f:selectItem itemLabel="Seleccione un autor" itemValue="" />
+                        <f:selectItems value="#{librosController.autores}" var="autor"
+                                       itemLabel="#{autor.nombre}" itemValue="#{autor}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="genero" value="Género:" />
+                    <p:selectOneMenu id="genero" value="#{librosController.libroSeleccionado.genero}"
+                                     required="true" class="w-full">
+                        <f:selectItem itemLabel="Seleccione un género" itemValue="" />
+                        <f:selectItems value="#{librosController.generos}" var="genero"
+                                       itemLabel="#{genero.tipo}" itemValue="#{genero}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="ubicacion" value="Ubicación:" />
+                    <p:selectOneMenu id="ubicacion" value="#{librosController.libroSeleccionado.ubicacion}"
+                                     required="true" class="w-full">
+                        <f:selectItem itemLabel="Seleccione una ubicación" itemValue="" />
+                        <f:selectItems value="#{librosController.ubicaciones}" var="ubicacion"
+                                       itemLabel="#{ubicacion.descripcionCompleta}"
+                                       itemValue="#{ubicacion}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="fechaPublicacion" value="Fecha de Publicación:" />
+                    <p:calendar id="fechaPublicacion" value="#{librosController.libroSeleccionado.fechaPublicacion}"
+                                pattern="yyyy-MM-dd" class="w-full"/>
+
+                    <p:outputLabel for="cantidad" value="Cantidad:" />
+                    <p:inputNumber id="cantidad" value="#{librosController.libroSeleccionado.cantidad}"
+                                   class="w-full"/>
+
+                    <p:outputLabel for="disponibilidad" value="Disponibilidad:" />
+                    <p:selectOneMenu id="disponibilidad" value="#{librosController.libroSeleccionado.disponibilidad}"
+                                     class="w-full">
+                        <f:selectItem itemLabel="Disponible" itemValue="disponible" />
+                        <f:selectItem itemLabel="No disponible" itemValue="no disponible" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+                <f:facet name="footer">
+                    <div class="flex justify-content-end gap-2">
+                        <p:commandButton value="Cancelar" onclick="PF('ventanaModalLibro').hide()"
+                                         class="p-button-secondary"/>
+                        <p:commandButton value="Guardar" action="#{librosController.guardarLibro}"
+                                         update=":formulario-libros:mensaje_emergente, :formulario-libros:tabla-libros"/>
+                    </div>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </div>
+</h:body>
+</h:html>

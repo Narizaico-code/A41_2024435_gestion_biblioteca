@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class GestionBibliotecaApplication implements CommandLineRunner {
     @Autowired
     private IGeneroService generoService;
@@ -80,94 +80,6 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
         return salir;
     }
 
-    private boolean menuGeneros(Scanner consola) {
-        logger.info("""
-                \nElija una opcion en el CRUD:
-                1. Agregar nuevo Genero.
-                2. Eliminar un genero.
-                3. Editar un genero.
-                4. Listar los generos.
-                5. Buscar los libros por genero.
-                6. Buscar genero por Id.
-                7. Salir.
-                Elija: \s""");
-        var opcionClase = Integer.parseInt(consola.nextLine());
-
-        switch (opcionClase) {
-            case 1 -> {
-                var genero = new Genero();
-                logger.info(sl + "************** Agregar un nuevo genero **************" + sl);
-                logger.info("Nombre del genero: ");
-                genero.setTipo(consola.nextLine());
-                logger.info("Una descripcion para el genero(No más de 255 caracteres): ");
-                genero.setDescripcion(consola.nextLine());
-                generoService.guardarGenero(genero);
-            }
-            case 2 -> {
-                logger.info(sl + "************** Eliminar un genero **************" + sl);
-                List<Genero> listadoGeneros = generoService.listarGeneros();
-                listadoGeneros.forEach(g -> logger.info(g.toString() + sl));
-                logger.info("Ingrese el codigo del genero a eliminar: ");
-                var genero = generoService.buscarPorId(Integer.parseInt(consola.nextLine()));
-                if (genero != null) {
-                    generoService.eliminarGenero(genero);
-                    logger.info("Genero eliminado: " + sl + genero + sl);
-                } else {
-                    logger.info("No se encontro el genero.");
-                }
-            }
-            case 3 -> {
-                logger.info(sl + "************** Editar un genero **************" + sl);
-                logger.info("Ingrese el codigo del genero a editar: ");
-                var genero = generoService.buscarPorId(Integer.parseInt(consola.nextLine()));
-                if (genero != null) {
-                    logger.info("Nombre del genero: ");
-                    genero.setTipo(consola.nextLine());
-                    logger.info("Una descripcion para the genero(No más de 255 caracteres): ");
-                    genero.setDescripcion(consola.nextLine());
-                    generoService.guardarGenero(genero);
-                    logger.info("Genero modificado: " + sl + genero + sl);
-                } else {
-                    logger.info("Genero no encontrado.");
-                }
-            }
-            case 4 -> {
-                logger.info(sl + "************** Listado de Todos los Generos **************" + sl);
-                List<Genero> listadoGeneros = generoService.listarGeneros();
-                listadoGeneros.forEach(g -> logger.info(g.toString() + sl));
-            }
-            case 5 -> {
-                logger.info(sl + "************** Buscar libros de un genero **************" + sl);
-                logger.info("Generos existentes: " + sl);
-                List<Genero> listadoGeneros = generoService.listarGeneros();
-                listadoGeneros.forEach(g -> logger.info(g.getTipo() + sl));
-                logger.info("Ingrese el nombre del genero a consultar: " + sl);
-                List<Libro> libros = generoService.listarLibrosPorGenero(consola.nextLine());
-                if (libros != null && !libros.isEmpty()) {
-                    libros.forEach(l -> logger.info(l.toString() + sl));
-                } else {
-                    logger.info("No se encontraron libros para este genero." + sl);
-                }
-            }
-            case 6 -> {
-                logger.info(sl + "************** Genero de un ID **************" + sl);
-                logger.info("Ingrese el Id: " + sl);
-                var codigo = Integer.parseInt(consola.nextLine());
-                var genero = generoService.buscarPorId(codigo);
-                if (genero != null) {
-                    logger.info("Genero encontrado: " + genero + sl);
-                } else {
-                    logger.info("Genero con codigo " + codigo + " no encontrado." + sl);
-                }
-            }
-            case 7 -> {
-                return true;
-            }
-            default -> logger.info("Numero incorrecto");
-        }
-        return false;
-    }
-
     private boolean menuLibros(Scanner consola) {
         logger.info("""
                 \nElija una opcion en el CRUD:
@@ -195,7 +107,7 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                 // Solicitar género
                 logger.info("Seleccione un género: " + sl);
                 listadoGeneros.forEach(g -> logger.info("Género: " + g.getTipo() + sl + "código del género: " + g.getCodigoGenero() + sl));
-                logger.info("Escriba el género o su código: " + sl);
+                logger.info("Escriba el código del género: " + sl);
                 var inputGenero = consola.nextLine();
                 Genero genero = null;
 
@@ -208,18 +120,20 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     Integer codigoGenero = Integer.parseInt(inputGenero);
                     genero = generoService.buscarPorId(codigoGenero);
                 } catch (NumberFormatException e) {
-                    genero = generoService.buscarPorTipo(inputGenero);
+                    logger.info("Debe ingresar un código numérico para el género.");
+                    break;
                 }
 
                 if (genero == null) {
                     logger.info("Género no válido.");
                     break;
                 }
-                libro.setCodigoGenero(genero.getCodigoGenero());
+                libro.setGenero(genero);
 
+                // Solicitar autor
                 logger.info("Seleccione un autor: " + sl);
                 listadoAutores.forEach(a -> logger.info("Autor: " + a.getNombre() + sl + "código del autor: " + a.getCodigoAutor() + sl));
-                logger.info("Escriba el autor o su código: " + sl);
+                logger.info("Escriba el código del autor: " + sl);
                 var inputAutor = consola.nextLine();
                 Autor autor = null;
 
@@ -232,17 +146,19 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     Integer codigoAutor = Integer.parseInt(inputAutor);
                     autor = autorService.buscarPorId(codigoAutor);
                 } catch (NumberFormatException e) {
-                    autor = autorService.buscarPorNombre(inputAutor);
+                    logger.info("Debe ingresar un código numérico para el autor.");
+                    break;
                 }
 
                 if (autor == null) {
                     logger.info("Autor no válido.");
                     break;
                 }
-                libro.setCodigoAutor(autor.getCodigoAutor());
+                libro.setAutor(autor);
 
+                // Solicitar ubicación
                 logger.info("Seleccione una ubicación: " + sl);
-                listadoUbicaciones.forEach(u -> logger.info("Ubicación: " + u.getEdificio() + " - " + u.getSalon() + " - " + u.getEstanteria() + " - Fila: " + u.getFila() + sl + "código de la ubicación: " + u.getCodigoUbicacion() + sl));
+                listadoUbicaciones.forEach(u -> logger.info("Ubicación: " + u.getDescripcionCompleta() + sl + "código de la ubicación: " + u.getCodigoUbicacion() + sl));
                 logger.info("Escriba el código de la ubicación: " + sl);
                 var inputUbicacion = consola.nextLine();
                 Ubicacion ubicacion = null;
@@ -264,8 +180,9 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     logger.info("Ubicación no válida.");
                     break;
                 }
-                libro.setCodigoUbicacion(ubicacion.getCodigoUbicacion());
+                libro.setUbicacion(ubicacion);
 
+                // Resto de campos
                 logger.info("Fecha de publicación (yyyy-mm-dd): ");
                 String fechaStr = consola.nextLine();
                 if (!fechaStr.isEmpty()) {
@@ -313,16 +230,24 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     var inputGenero = consola.nextLine();
                     Genero genero = null;
 
+                    if (inputGenero.isEmpty()) {
+                        logger.info("Debe ingresar un género válido.");
+                        break;
+                    }
+
                     try {
                         Integer codigoGenero = Integer.parseInt(inputGenero);
                         genero = generoService.buscarPorId(codigoGenero);
                     } catch (NumberFormatException e) {
-                        genero = generoService.buscarPorTipo(inputGenero);
+                        logger.info("Debe ingresar un código numérico para el género.");
+                        break;
                     }
 
-                    if (genero != null) {
-                        libro.setCodigoGenero(genero.getCodigoGenero());
+                    if (genero == null) {
+                        logger.info("Género no válido.");
+                        break;
                     }
+                    libro.setGenero(genero);
 
                     // Editar autor
                     logger.info("Autores disponibles: " + sl);
@@ -332,16 +257,24 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     var inputAutor = consola.nextLine();
                     Autor autor = null;
 
+                    if (inputAutor.isEmpty()) {
+                        logger.info("Debe ingresar un autor válido.");
+                        break;
+                    }
+
                     try {
                         Integer codigoAutor = Integer.parseInt(inputAutor);
                         autor = autorService.buscarPorId(codigoAutor);
                     } catch (NumberFormatException e) {
-                        autor = autorService.buscarPorNombre(inputAutor);
+                        logger.info("Debe ingresar un código numérico para el autor.");
+                        break;
                     }
 
-                    if (autor != null) {
-                        libro.setCodigoAutor(autor.getCodigoAutor());
+                    if (autor == null) {
+                        logger.info("Autor no válido.");
+                        break;
                     }
+                    libro.setAutor(autor);
 
                     // Editar ubicación
                     logger.info("Ubicaciones disponibles: " + sl);
@@ -351,16 +284,24 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     var inputUbicacion = consola.nextLine();
                     Ubicacion ubicacion = null;
 
+                    if (inputUbicacion.isEmpty()) {
+                        logger.info("Debe ingresar una ubicación válida.");
+                        break;
+                    }
+
                     try {
                         Integer codigoUbicacion = Integer.parseInt(inputUbicacion);
                         ubicacion = ubicacionService.buscarPorId(codigoUbicacion);
                     } catch (NumberFormatException e) {
                         logger.info("Debe ingresar un código numérico para la ubicación.");
+                        break;
                     }
 
-                    if (ubicacion != null) {
-                        libro.setCodigoUbicacion(ubicacion.getCodigoUbicacion());
+                    if (ubicacion == null) {
+                        logger.info("Ubicación no válida.");
+                        break;
                     }
+                    libro.setUbicacion(ubicacion);
 
                     logger.info("Nueva fecha de publicación (yyyy-mm-dd): ");
                     String fechaStr = consola.nextLine();
@@ -659,6 +600,94 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                     libros.forEach(l -> logger.info(l.toString() + sl));
                 } else {
                     logger.info("No se encontraron libros para este autor." + sl);
+                }
+            }
+            case 7 -> {
+                return true;
+            }
+            default -> logger.info("Numero incorrecto");
+        }
+        return false;
+    }
+    private boolean menuGeneros(Scanner consola) {
+        logger.info("""
+            \nElija una opcion en el CRUD:
+            1. Agregar nuevo Genero.
+            2. Eliminar un genero.
+            3. Editar un genero.
+            4. Listar los generos.
+            5. Buscar los libros por genero.
+            6. Buscar genero por Id.
+            7. Salir.
+            Elija: \s""");
+        var opcionClase = Integer.parseInt(consola.nextLine());
+
+        switch (opcionClase) {
+            case 1 -> {
+                var genero = new Genero();
+                logger.info(sl + "************** Agregar un nuevo genero **************" + sl);
+                logger.info("Nombre del genero: ");
+                genero.setTipo(consola.nextLine());
+                logger.info("Una descripcion para el genero(No más de 255 caracteres): ");
+                genero.setDescripcion(consola.nextLine());
+                generoService.guardarGenero(genero);
+                logger.info("Género agregado correctamente.");
+            }
+            case 2 -> {
+                logger.info(sl + "************** Eliminar un genero **************" + sl);
+                List<Genero> listadoGeneros = generoService.listarGeneros();
+                listadoGeneros.forEach(g -> logger.info(g.toString() + sl));
+                logger.info("Ingrese el codigo del genero a eliminar: ");
+                var genero = generoService.buscarPorId(Integer.parseInt(consola.nextLine()));
+                if (genero != null) {
+                    generoService.eliminarGenero(genero);
+                    logger.info("Genero eliminado: " + sl + genero + sl);
+                } else {
+                    logger.info("No se encontro el genero.");
+                }
+            }
+            case 3 -> {
+                logger.info(sl + "************** Editar un genero **************" + sl);
+                logger.info("Ingrese el codigo del genero a editar: ");
+                var genero = generoService.buscarPorId(Integer.parseInt(consola.nextLine()));
+                if (genero != null) {
+                    logger.info("Nombre del genero: ");
+                    genero.setTipo(consola.nextLine());
+                    logger.info("Una descripcion para el genero(No más de 255 caracteres): ");
+                    genero.setDescripcion(consola.nextLine());
+                    generoService.guardarGenero(genero);
+                    logger.info("Genero modificado: " + sl + genero + sl);
+                } else {
+                    logger.info("Genero no encontrado.");
+                }
+            }
+            case 4 -> {
+                logger.info(sl + "************** Listado de Todos los Generos **************" + sl);
+                List<Genero> listadoGeneros = generoService.listarGeneros();
+                listadoGeneros.forEach(g -> logger.info(g.toString() + sl));
+            }
+            case 5 -> {
+                logger.info(sl + "************** Buscar libros de un genero **************" + sl);
+                logger.info("Generos existentes: " + sl);
+                List<Genero> listadoGeneros = generoService.listarGeneros();
+                listadoGeneros.forEach(g -> logger.info(g.getTipo() + sl));
+                logger.info("Ingrese el nombre del genero a consultar: " + sl);
+                List<Libro> libros = generoService.listarLibrosPorGenero(consola.nextLine());
+                if (libros != null && !libros.isEmpty()) {
+                    libros.forEach(l -> logger.info(l.toString() + sl));
+                } else {
+                    logger.info("No se encontraron libros para este genero." + sl);
+                }
+            }
+            case 6 -> {
+                logger.info(sl + "************** Genero de un ID **************" + sl);
+                logger.info("Ingrese el Id: " + sl);
+                var codigo = Integer.parseInt(consola.nextLine());
+                var genero = generoService.buscarPorId(codigo);
+                if (genero != null) {
+                    logger.info("Genero encontrado: " + genero + sl);
+                } else {
+                    logger.info("Genero con codigo " + codigo + " no encontrado." + sl);
                 }
             }
             case 7 -> {

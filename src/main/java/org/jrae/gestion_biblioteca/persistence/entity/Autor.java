@@ -13,8 +13,9 @@ import lombok.*;
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer codigoAutor;
     @Column
+    private Integer codigoAutor;
+
     private String nombre;
     private String nacionalidad;
 }

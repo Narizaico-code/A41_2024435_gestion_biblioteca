@@ -6,6 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class GestionBibliotecaApplicationWeb {
     public static void main(String[] args) {
-        SpringApplication.run(GestionBibliotecaApplication.class, args);
+        SpringApplication.run(GestionBibliotecaApplicationWeb.class, args);
     }
 }

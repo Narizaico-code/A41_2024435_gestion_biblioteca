@@ -3,7 +3,8 @@ package org.jrae.gestion_biblioteca.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "Generos")
+@Entity
+@Table(name = "Generos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,9 +13,9 @@ import lombok.*;
 public class Genero {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codigo_genero")
     private Integer codigoGenero;
 
-    @Column
     private String tipo;
     private String descripcion;
 }

@@ -1,13 +1,94 @@
 <!DOCTYPE html>
 <h:html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h = "http://xmlns.jcp.org/jsf/html"
-        xmlns:f = "http://xmlns.jcp.org/jsf/core"
-        xmlns:p = "http://primefaces.org/ui">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Gestion de ubicaciones🔍</title>
+        <title>Gestión de Ubicaciones🔍</title>
         <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
         <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/themes/primeone-dark.css"/>
     </h:head>
     <h:body>
-        
+        <div class="p-3">
+            <h:form id="formulario-ubicaciones">
+                <p:growl id="mensaje_emergente" showDetail="true" life="3000" />
+                
+                <div class="flex justify-content-between align-items-center mb-3">
+                    <p:commandButton value="Volver al Menú Principal" action="index?faces-redirect=true" 
+                                   icon="pi pi-arrow-left" class="p-button-secondary"/>
+                    
+                    <p:commandButton value="Agregar Ubicación" icon="pi pi-plus" 
+                                   action="#{ubicacionesController.agregarUbicacion}" 
+                                   oncomplete="PF('ventanaModalUbicacion').show()" update=":formulario-ubicaciones:ubicacion-form"/>
+                </div>
+                
+                <p:dataTable id="tabla-ubicaciones" value="#{ubicacionesController.ubicaciones}" var="ubicacion"
+                           class="p-datatable-gridlines">
+                    <p:column headerText="Código">
+                        <h:outputText value="#{ubicacion.codigoUbicacion}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Edificio" sortBy="#{ubicacion.edificio}">
+                        <h:outputText value="#{ubicacion.edificio}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Salón" sortBy="#{ubicacion.salon}">
+                        <h:outputText value="#{ubicacion.salon}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Estantería" sortBy="#{ubicacion.estanteria}">
+                        <h:outputText value="#{ubicacion.estanteria}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Fila" sortBy="#{ubicacion.fila}">
+                        <h:outputText value="#{ubicacion.fila}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Acciones">
+                        <div class="flex gap-2">
+                            <p:commandButton icon="pi pi-pencil" title="Editar"
+                                           action="#{ubicacionesController.editarUbicacion(ubicacion)}"
+                                           oncomplete="PF('ventanaModalUbicacion').show()"
+                                             process="@this"
+                                           update=":formulario-ubicaciones:ubicacion-form"/>
+                            
+                            <p:commandButton icon="pi pi-trash" title="Eliminar" 
+                                           action="#{ubicacionesController.eliminarUbicacion}"
+                                           update=":formulario-ubicaciones:mensaje_emergente, :formulario-ubicaciones:tabla-ubicaciones"/>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+                
+                <p:dialog header="Datos de la Ubicación" widgetVar="ventanaModalUbicacion" modal="true" 
+                        class="w-6">
+                    <h:panelGrid id="ubicacion-form" class="w-full">
+                        <p:outputLabel for="edificio" value="Edificio:" />
+                        <p:inputText id="edificio" value="#{ubicacionesController.ubicacionSeleccionada.edificio}" 
+                                   required="true" class="w-full"/>
+                        
+                        <p:outputLabel for="salon" value="Salón:" />
+                        <p:inputText id="salon" value="#{ubicacionesController.ubicacionSeleccionada.salon}" 
+                                   required="true" class="w-full"/>
+                        
+                        <p:outputLabel for="estanteria" value="Estantería:" />
+                        <p:inputText id="estanteria" value="#{ubicacionesController.ubicacionSeleccionada.estanteria}" 
+                                   class="w-full"/>
+                        
+                        <p:outputLabel for="fila" value="Fila:" />
+                        <p:inputNumber id="fila" value="#{ubicacionesController.ubicacionSeleccionada.fila}" 
+                                     class="w-full"/>
+                    </h:panelGrid>
+                    
+                    <f:facet name="footer">
+                        <div class="flex justify-content-end gap-2">
+                            <p:commandButton value="Cancelar" onclick="PF('ventanaModalUbicacion').hide()" 
+                                           class="p-button-secondary"/>
+                            <p:commandButton value="Guardar" action="#{ubicacionesController.guardarUbicacion}" 
+                                           update=":formulario-ubicaciones:mensaje_emergente, :formulario-ubicaciones:tabla-ubicaciones"/>
+                        </div>
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </div>
     </h:body>
+</h:html>
