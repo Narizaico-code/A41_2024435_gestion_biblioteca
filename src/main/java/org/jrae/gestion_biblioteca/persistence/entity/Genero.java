@@ -1,10 +1,10 @@
 package org.jrae.gestion_biblioteca.persistence.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "Generos")
-// Lombok
-@Data //Genera los getters and setters
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -12,7 +12,8 @@ import lombok.*;
 public class Genero {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer codigoGenero; //Permite usar null en vez de 0
+    private Integer codigoGenero;
+
     @Column
     private String tipo;
     private String descripcion;

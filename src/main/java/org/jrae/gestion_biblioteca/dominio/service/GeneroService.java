@@ -5,49 +5,47 @@ import org.jrae.gestion_biblioteca.persistence.entity.Genero;
 import org.jrae.gestion_biblioteca.persistence.entity.Libro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class GeneroService implements IGeneroService {
+
     @Autowired
     private GeneroCrud crud;
+
     @Autowired
     private ILibroService libroService;
 
-    private static final Logger logger = LoggerFactory.getLogger(GeneroService.class);
-    String sl = System.lineSeparator();
-
     @Override
     public List<Genero> listarGeneros() {
-        List<Genero> generos = crud.findAll();
-        return generos;
+        return crud.findAll();
     }
 
     @Override
-    public Genero listarPorId(Integer codigo) {
-        Genero genero = crud.findById(codigo).orElse(null);
-        return genero;
+    public Genero buscarPorId(Integer id) {
+        return crud.findById(id).orElse(null);
     }
 
     @Override
-    public List<Libro> listarPorGenero(String genero) {
+    public Genero buscarPorTipo(String tipo) {
+        return crud.findByTipo(tipo).orElse(null);
+    }
+
+    @Override
+    public List<Libro> listarLibrosPorGenero(String genero) {
         List<Libro> librosPorGenero = new ArrayList<>();
-        for (Genero g : listarGeneros()) {
-            if (genero.equalsIgnoreCase(g.getTipo())) {
-                for (Libro l : libroService.listarLibros()) {
-                    if (g.getCodigoGenero() == l.getCodigoGenero()) {
-                        librosPorGenero.add(l);
-                    }
+        Genero generoObj = buscarPorTipo(genero);
+
+        if (generoObj != null) {
+            for (Libro libro : libroService.listarLibros()) {
+                if (libro.getCodigoGenero() != null && libro.getCodigoGenero().equals(generoObj.getCodigoGenero())) {
+                    librosPorGenero.add(libro);
                 }
             }
         }
         return librosPorGenero;
     }
-
 
     @Override
     public void guardarGenero(Genero genero) {
