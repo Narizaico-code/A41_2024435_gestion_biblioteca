@@ -35,6 +35,39 @@ public class LibroService implements ILibroService {
     }
 
     @Override
+    public List<Libro> buscarPorGenero(Integer codigoGenero) {
+        List<Libro> librosPorGenero = new ArrayList<>();
+        for (Libro libro : listarLibros()) {
+            if (libro.getCodigoGenero() != null && libro.getCodigoGenero().equals(codigoGenero)) {
+                librosPorGenero.add(libro);
+            }
+        }
+        return librosPorGenero;
+    }
+
+    @Override
+    public List<Libro> buscarPorAutor(Integer codigoAutor) {
+        List<Libro> librosPorAutor = new ArrayList<>();
+        for (Libro libro : listarLibros()) {
+            if (libro.getCodigoAutor() != null && libro.getCodigoAutor().equals(codigoAutor)) {
+                librosPorAutor.add(libro);
+            }
+        }
+        return librosPorAutor;
+    }
+
+    @Override
+    public List<Libro> buscarPorUbicacion(Integer codigoUbicacion) {
+        List<Libro> librosPorUbicacion = new ArrayList<>();
+        for (Libro libro : listarLibros()) {
+            if (libro.getCodigoUbicacion() != null && libro.getCodigoUbicacion().equals(codigoUbicacion)) {
+                librosPorUbicacion.add(libro);
+            }
+        }
+        return librosPorUbicacion;
+    }
+
+    @Override
     public void guardarLibro(Libro libro) {
         crud.save(libro);
     }

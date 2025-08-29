@@ -2,12 +2,11 @@ package org.jrae.gestion_biblioteca.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 
-@Entity(name = "Libros")
-// Lombok
-@Data //Genera los getters and setters
+@Entity
+@Table(name = "Libros")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -15,17 +14,11 @@ import java.time.LocalDate;
 public class Libro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer codigoLibro; //Permite usar null en vez de 0
-    @ManyToOne
-    @JoinColumn(name = "codigo_genero")
-    private Integer codigoGenero;
-    @ManyToOne
-    @JoinColumn(name = "codigo_ubicacion")
-    private Integer codigoUbicacion;
-    @ManyToOne
-    @JoinColumn(name = "codigo_autor")
-    private Integer codigoAutor;
     @Column
+    private Integer codigoLibro;
+    private Integer codigoGenero;
+    private Integer codigoUbicacion;
+    private Integer codigoAutor;
     private String titulo;
     private LocalDate fechaPublicacion;
     private Integer cantidad;

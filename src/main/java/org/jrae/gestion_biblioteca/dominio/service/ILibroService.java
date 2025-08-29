@@ -7,6 +7,9 @@ public interface ILibroService {
     List<Libro> listarLibros();
     Libro buscarPorId(Integer id);
     List<Libro> buscarPorTitulo(String titulo);
+    List<Libro> buscarPorGenero(Integer codigoGenero);
+    List<Libro> buscarPorAutor(Integer codigoAutor);
+    List<Libro> buscarPorUbicacion(Integer codigoUbicacion);
     void guardarLibro(Libro libro);
     void eliminarLibro(Libro libro);
 }

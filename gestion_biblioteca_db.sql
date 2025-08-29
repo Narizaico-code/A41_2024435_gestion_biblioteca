@@ -27,7 +27,6 @@ create table Libros(
     codigo_ubicacion integer,
     codigo_autor integer,
     titulo varchar(128),
-    autor varchar(64),
     fecha_publicacion date,
     cantidad integer,
     disponibilidad enum('disponible', 'no disponible') default 'disponible',

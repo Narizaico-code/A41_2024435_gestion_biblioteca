@@ -34,17 +34,11 @@ public class AutorService implements IAutorService {
 
     @Override
     public List<Libro> listarLibrosPorAutor(String autor) {
-        List<Libro> librosPorAutor = new ArrayList<>();
         Autor autorObj = buscarPorNombre(autor);
-
         if (autorObj != null) {
-            for (Libro libro : libroService.listarLibros()) {
-                if (libro.getCodigoAutor() != null && libro.getCodigoAutor().equals(autorObj.getCodigoAutor())) {
-                    librosPorAutor.add(libro);
-                }
-            }
+            return libroService.buscarPorAutor(autorObj.getCodigoAutor());
         }
-        return librosPorAutor;
+        return new ArrayList<>();
     }
 
     @Override

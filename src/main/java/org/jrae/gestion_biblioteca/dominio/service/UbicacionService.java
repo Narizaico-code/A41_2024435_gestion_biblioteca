@@ -29,14 +29,7 @@ public class UbicacionService implements IUbicacionService {
 
     @Override
     public List<Libro> listarLibrosPorUbicacion(Integer codigoUbicacion) {
-        List<Libro> librosPorUbicacion = new ArrayList<>();
-
-        for (Libro libro : libroService.listarLibros()) {
-            if (libro.getCodigoUbicacion() != null && libro.getCodigoUbicacion().equals(codigoUbicacion)) {
-                librosPorUbicacion.add(libro);
-            }
-        }
-        return librosPorUbicacion;
+        return libroService.buscarPorUbicacion(codigoUbicacion);
     }
 
     @Override

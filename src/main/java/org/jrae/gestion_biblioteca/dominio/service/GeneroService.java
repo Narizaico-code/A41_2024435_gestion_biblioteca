@@ -34,17 +34,11 @@ public class GeneroService implements IGeneroService {
 
     @Override
     public List<Libro> listarLibrosPorGenero(String genero) {
-        List<Libro> librosPorGenero = new ArrayList<>();
         Genero generoObj = buscarPorTipo(genero);
-
         if (generoObj != null) {
-            for (Libro libro : libroService.listarLibros()) {
-                if (libro.getCodigoGenero() != null && libro.getCodigoGenero().equals(generoObj.getCodigoGenero())) {
-                    librosPorGenero.add(libro);
-                }
-            }
+            return libroService.buscarPorGenero(generoObj.getCodigoGenero());
         }
-        return librosPorGenero;
+        return new ArrayList<>();
     }
 
     @Override
