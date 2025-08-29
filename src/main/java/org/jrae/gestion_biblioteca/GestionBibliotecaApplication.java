@@ -217,7 +217,6 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                 }
                 libro.setCodigoGenero(genero.getCodigoGenero());
 
-                // Solicitar autor
                 logger.info("Seleccione un autor: " + sl);
                 listadoAutores.forEach(a -> logger.info("Autor: " + a.getNombre() + sl + "código del autor: " + a.getCodigoAutor() + sl));
                 logger.info("Escriba el autor o su código: " + sl);
@@ -242,7 +241,6 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                 }
                 libro.setCodigoAutor(autor.getCodigoAutor());
 
-                // Solicitar ubicación por código
                 logger.info("Seleccione una ubicación: " + sl);
                 listadoUbicaciones.forEach(u -> logger.info("Ubicación: " + u.getEdificio() + " - " + u.getSalon() + " - " + u.getEstanteria() + " - Fila: " + u.getFila() + sl + "código de la ubicación: " + u.getCodigoUbicacion() + sl));
                 logger.info("Escriba el código de la ubicación: " + sl);
@@ -268,7 +266,6 @@ public class GestionBibliotecaApplication implements CommandLineRunner {
                 }
                 libro.setCodigoUbicacion(ubicacion.getCodigoUbicacion());
 
-                // Resto de campos
                 logger.info("Fecha de publicación (yyyy-mm-dd): ");
                 String fechaStr = consola.nextLine();
                 if (!fechaStr.isEmpty()) {

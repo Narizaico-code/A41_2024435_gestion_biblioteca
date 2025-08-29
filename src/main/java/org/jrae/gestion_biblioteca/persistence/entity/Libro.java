@@ -16,13 +16,16 @@ public class Libro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer codigoLibro; //Permite usar null en vez de 0
-    @Column
     @ManyToOne
+    @JoinColumn(name = "codigo_genero")
     private Integer codigoGenero;
     @ManyToOne
+    @JoinColumn(name = "codigo_ubicacion")
     private Integer codigoUbicacion;
     @ManyToOne
+    @JoinColumn(name = "codigo_autor")
     private Integer codigoAutor;
+    @Column
     private String titulo;
     private LocalDate fechaPublicacion;
     private Integer cantidad;
