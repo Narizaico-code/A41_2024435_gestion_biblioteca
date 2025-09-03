@@ -84,7 +84,7 @@
                     <p:outputLabel for="autor" value="Autor:" />
                     <p:selectOneMenu id="autor" value="#{librosController.libroSeleccionado.autor}"
                                      required="true" class="w-full">
-                        <f:selectItem itemLabel="Seleccione un autor" itemValue="" />
+                        <f:selectItem itemLabel="Seleccione un autor" itemValue="#{null}" />
                         <f:selectItems value="#{librosController.autores}" var="autor"
                                        itemLabel="#{autor.nombre}" itemValue="#{autor}"/>
                     </p:selectOneMenu>

@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class GestionBibliotecaApplication implements CommandLineRunner {
     @Autowired
     private IGeneroService generoService;
